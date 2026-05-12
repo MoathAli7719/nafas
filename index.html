@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAFAS - عرض مشروع التخرج</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -761,6 +757,12 @@
         <p style="font-size: 0.8em; margin-top: 10px; opacity: 0.6;">Project Graduation 2026</p>
     </footer>
 
+    <script>
+        // Redirect to mobile version on small screens
+        if (window.innerWidth <= 768) {
+            window.location.href = 'mobile.html';
+        }
+    </script>
     <script src="script.js" defer></script>
 </body>
 </html>
