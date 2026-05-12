@@ -9,6 +9,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = window.innerWidth <= 768;
 
 // Hero app-like role switch
 const roleTabs = Array.from(document.querySelectorAll('.app-tab'));
@@ -65,22 +66,24 @@ let spTX = 50;
 let spTY = 45;
 
 function animateSpotlight() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
     spX += (spTX - spX) * 0.05;
     spY += (spTY - spY) * 0.05;
     spotlight.style.background = `radial-gradient(circle at ${spX.toFixed(2)}% ${spY.toFixed(2)}%, rgba(167, 243, 208, 0.10), rgba(47, 191, 113, 0.05) 35%, transparent 60%)`;
     requestAnimationFrame(animateSpotlight);
 }
-requestAnimationFrame(animateSpotlight);
+if (!isMobile) {
+    requestAnimationFrame(animateSpotlight);
 
-window.addEventListener('mousemove', (e) => {
-    spTX = (e.clientX / window.innerWidth) * 100;
-    spTY = (e.clientY / window.innerHeight) * 100;
-}, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+        spTX = (e.clientX / window.innerWidth) * 100;
+        spTY = (e.clientY / window.innerHeight) * 100;
+    }, { passive: true });
+}
 
 // Intro overlay
 const intro = document.getElementById('intro');
-if (!prefersReducedMotion) {
+if (!prefersReducedMotion && !isMobile) {
     window.setTimeout(() => {
         intro.classList.add('hidden');
     }, 1400);
@@ -106,39 +109,40 @@ window.addEventListener('scroll', updateScrollProgress, { passive: true });
 
 // Scroll reveal animations + active section spotlight
 const sections = Array.from(document.querySelectorAll('section'));
-sections.forEach((sec) => sec.classList.add('reveal'));
-
 const staggerTargets = Array.from(document.querySelectorAll('.grid, .timeline'));
-staggerTargets.forEach((el) => el.classList.add('reveal-stagger'));
-
 let activeSection = null;
 
-const io = new IntersectionObserver(
-    (entries) => {
-        for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add('visible');
-        }
+if (!isMobile) {
+    sections.forEach((sec) => sec.classList.add('reveal'));
+    staggerTargets.forEach((el) => el.classList.add('reveal-stagger'));
 
-        const best = entries
-            .filter((e) => e.isIntersecting && e.target.tagName === 'SECTION')
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    const io = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.add('visible');
+            }
 
-        if (best && best.target !== activeSection) {
-            if (activeSection) activeSection.classList.remove('is-active');
-            activeSection = best.target;
-            activeSection.classList.add('is-active');
-        }
-    },
-    { threshold: [0.12, 0.22, 0.35, 0.5], rootMargin: '0px 0px -10% 0px' }
-);
+            const best = entries
+                .filter((e) => e.isIntersecting && e.target.tagName === 'SECTION')
+                .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-[...sections, ...staggerTargets].forEach((el) => io.observe(el));
+            if (best && best.target !== activeSection) {
+                if (activeSection) activeSection.classList.remove('is-active');
+                activeSection = best.target;
+                activeSection.classList.add('is-active');
+            }
+        },
+        { threshold: [0.12, 0.22, 0.35, 0.5], rootMargin: '0px 0px -10% 0px' }
+    );
+
+    [...sections, ...staggerTargets].forEach((el) => io.observe(el));
+}
 
 // Particles generation (optimized mode)
 const particlesRoot = document.querySelector('.particles');
 const particleCount = 30;
-if (particlesRoot) {
+if (particlesRoot && !isMobile) {
     for (let i = 0; i < particleCount; i++) {
         const p = document.createElement('span');
         p.className = 'particle';
@@ -168,23 +172,26 @@ let currentX = 0;
 let currentY = 0;
 
 function animateParallax() {
+    if (prefersReducedMotion || isMobile) return;
     currentX += (targetX - currentX) * 0.05;
     currentY += (targetY - currentY) * 0.05;
     bg.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
     rafId = requestAnimationFrame(animateParallax);
 }
-rafId = requestAnimationFrame(animateParallax);
+if (!isMobile) {
+    rafId = requestAnimationFrame(animateParallax);
 
-window.addEventListener('mousemove', (e) => {
-    const dx = (e.clientX / window.innerWidth) - 0.5;
-    const dy = (e.clientY / window.innerHeight) - 0.5;
-    targetX = dx * 10;
-    targetY = dy * 10;
-}, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+        const dx = (e.clientX / window.innerWidth) - 0.5;
+        const dy = (e.clientY / window.innerHeight) - 0.5;
+        targetX = dx * 10;
+        targetY = dy * 10;
+    }, { passive: true });
+}
 
 // 3D tilt on cards (optimized with throttling)
 const cards = Array.from(document.querySelectorAll('.card'));
-if (!prefersReducedMotion) {
+if (!prefersReducedMotion && !isMobile) {
     let tiltThrottle = false;
     cards.forEach((card) => {
         const shine = document.createElement('div');

@@ -719,4 +719,53 @@ section.is-active::before { opacity: 1; }
     .nav { padding: 15px; } 
     .nav-menu { display: none; }
     section { padding: 80px 5%; }
+    
+    /* Disable heavy effects on mobile */
+    .grain, .vignette, .spotlight, .animated-bg, .particles {
+        display: none !important;
+    }
+    
+    body {
+        background: var(--dark);
+    }
+    
+    /* Disable animations on mobile */
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    html {
+        scroll-behavior: auto;
+    }
+    
+    /* Disable 3D effects */
+    .card {
+        transform: none !important;
+        will-change: auto !important;
+    }
+    .card:hover {
+        transform: none !important;
+    }
+    .card::after {
+        display: none !important;
+    }
+    .card .tilt-shine {
+        display: none !important;
+    }
+    
+    /* Disable phone float */
+    .phone.float {
+        animation: none !important;
+    }
+    
+    /* Disable gradient animation */
+    .title-gradient {
+        animation: none !important;
+    }
+    
+    /* Disable intro animation */
+    .intro {
+        display: none !important;
+    }
 }
