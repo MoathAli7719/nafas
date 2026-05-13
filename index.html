@@ -1,0 +1,2278 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAFAS - عرض مشروع التخرج</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Improved Splash Screen with Website Colors */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b1220 0%, #111c33 50%, #0b1220 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            overflow: hidden;
+        }
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Animated Background */
+        .splash-bg-animation {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(47, 191, 113, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(167, 243, 208, 0.1) 0%, transparent 50%);
+            animation: bgMove 8s ease-in-out infinite;
+        }
+
+        /* Floating Particles */
+        .splash-particles-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        .splash-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(167, 243, 208, 0.6);
+            box-shadow: 0 0 10px rgba(167, 243, 208, 0.8);
+            animation: particleFloat 6s ease-in-out infinite;
+        }
+
+        /* Floating Stars */
+        .splash-star {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(251, 191, 36, 0.8);
+            animation: starFloat 8s ease-in-out infinite;
+        }
+
+        /* Floating Circles */
+        .splash-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(47, 191, 113, 0.4);
+            animation: circleFloat 10s ease-in-out infinite;
+        }
+
+        /* Logo Container */
+        .splash-logo-container {
+            position: relative;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        /* Logo Circle */
+        .splash-logo-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(47, 191, 113, 0.2) 0%, rgba(167, 243, 208, 0.1) 100%);
+            border: 4px solid rgba(167, 243, 208, 0.5);
+            box-shadow: 
+                0 20px 60px rgba(47, 191, 113, 0.3),
+                0 10px 30px rgba(167, 243, 208, 0.2),
+                inset 0 0 30px rgba(167, 243, 208, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Logo Icon */
+        .splash-logo-icon {
+            font-size: 100px;
+            animation: iconSpin 4s linear infinite;
+            display: inline-block;
+        }
+
+        /* Orbiting Elements */
+        .splash-orbit {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            border: 3px dashed rgba(167, 243, 208, 0.6);
+            animation: orbitSpin 10s linear infinite;
+            box-shadow: 0 0 30px rgba(167, 243, 208, 0.3);
+        }
+        .splash-orbit::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #2fbf71;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(47, 191, 113, 1), 0 0 60px rgba(47, 191, 113, 0.6);
+        }
+        .splash-orbit-2 {
+            width: 280px;
+            height: 280px;
+            animation: orbitSpin 15s linear infinite reverse;
+            border-color: rgba(251, 191, 36, 0.6);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+        .splash-orbit-2::before {
+            background: #fbbf24;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 1), 0 0 60px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Glow Effect */
+        .splash-logo-circle::after {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2fbf71, #a7f3d0);
+            opacity: 0.3;
+            filter: blur(30px);
+            z-index: -1;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        /* Main Text */
+        .splash-text {
+            font-size: 80px;
+            font-weight: 900;
+            margin-top: 40px;
+            background: linear-gradient(135deg, #2fbf71 0%, #a7f3d0 50%, #2fbf71 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: textGradient 3s ease-in-out infinite;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 30px rgba(47, 191, 113, 0.3);
+            position: relative;
+        }
+
+        /* Tagline */
+        .splash-tagline {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgba(47, 191, 113, 0.15);
+            border-radius: 30px;
+            border: 2px solid rgba(167, 243, 208, 0.5);
+            font-size: 22px;
+            font-weight: 700;
+            color: #a7f3d0;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 30px rgba(47, 191, 113, 0.2);
+            animation: taglineFloat 2s ease-in-out infinite;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Space Hint */
+        .splash-space-hint {
+            margin-top: 30px;
+            font-size: 14px;
+            color: rgba(167, 243, 208, 0.6);
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
+        /* Loading Dots */
+        .splash-loading {
+            margin-top: 50px;
+            display: flex;
+            gap: 12px;
+        }
+        .splash-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2fbf71;
+            animation: dotBounce 1.4s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(47, 191, 113, 0.8);
+        }
+        .splash-dot:nth-child(1) { animation-delay: 0s; }
+        .splash-dot:nth-child(2) { animation-delay: 0.2s; background: #a7f3d0; }
+        .splash-dot:nth-child(3) { animation-delay: 0.4s; background: #fbbf24; }
+
+        @keyframes bgMove {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+        @keyframes particleFloat {
+            0% { 
+                transform: translateY(100vh) translateX(0) scale(0) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+                transform: translateY(80vh) translateX(10px) scale(0.5) rotate(45deg); 
+            }
+            50% { 
+                transform: translateY(0) translateX(-10px) scale(1) rotate(180deg); 
+                opacity: 0.8; 
+            }
+            90% { 
+                transform: translateY(-80vh) translateX(10px) scale(0.8) rotate(315deg); 
+                opacity: 0.6; 
+            }
+            100% { 
+                transform: translateY(-100vh) translateX(0) scale(0) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+        @keyframes starFloat {
+            0% { 
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1); 
+                opacity: 0.8; 
+            }
+            25% { 
+                transform: translateY(-30px) translateX(20px) rotate(90deg) scale(1.3); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-50px) translateX(-20px) rotate(180deg) scale(1.5); 
+                opacity: 0.9; 
+            }
+            75% { 
+                transform: translateY(-30px) translateX(20px) rotate(270deg) scale(1.3); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(0) translateX(0) rotate(360deg) scale(1); 
+                opacity: 0.8; 
+            }
+        }
+        @keyframes circleFloat {
+            0% { 
+                transform: translateY(0) translateX(0) scale(1) rotate(0deg); 
+                opacity: 0.4; 
+            }
+            25% { 
+                transform: translateY(-40px) translateX(30px) scale(1.2) rotate(90deg); 
+                opacity: 0.6; 
+            }
+            50% { 
+                transform: translateY(-60px) translateX(-30px) scale(1.4) rotate(180deg); 
+                opacity: 0.8; 
+            }
+            75% { 
+                transform: translateY(-40px) translateX(30px) scale(1.2) rotate(270deg); 
+                opacity: 0.6; 
+            }
+            100% { 
+                transform: translateY(0) translateX(0) scale(1) rotate(360deg); 
+                opacity: 0.4; 
+            }
+        }
+        @keyframes logoFloat {
+            0% { 
+                transform: translateY(0) rotate(0deg) scale(1); 
+            }
+            25% { 
+                transform: translateY(-20px) rotate(10deg) scale(1.05); 
+            }
+            50% { 
+                transform: translateY(-10px) rotate(0deg) scale(1.1); 
+            }
+            75% { 
+                transform: translateY(-20px) rotate(-10deg) scale(1.05); 
+            }
+            100% { 
+                transform: translateY(0) rotate(0deg) scale(1); 
+            }
+        }
+        @keyframes iconSpin {
+            0% { 
+                transform: rotateY(0deg) rotateX(0deg) scale(1); 
+            }
+            25% { 
+                transform: rotateY(90deg) rotateX(10deg) scale(1.1); 
+            }
+            50% { 
+                transform: rotateY(180deg) rotateX(0deg) scale(1.2); 
+            }
+            75% { 
+                transform: rotateY(270deg) rotateX(-10deg) scale(1.1); 
+            }
+            100% { 
+                transform: rotateY(360deg) rotateX(0deg) scale(1); 
+            }
+        }
+        @keyframes orbitSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes glowPulse {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1); 
+                filter: blur(30px);
+            }
+            50% { 
+                opacity: 0.6; 
+                transform: scale(1.15); 
+                filter: blur(40px);
+            }
+        }
+        @keyframes textGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes taglineFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-8px) scale(1.05); }
+            50% { transform: translateY(-12px) scale(1.1); }
+            75% { transform: translateY(-8px) scale(1.05); }
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0) translateY(0); opacity: 0.5; }
+            40% { transform: scale(1.2) translateY(-10px); opacity: 1; }
+        }
+        @keyframes bgMove {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg); 
+                background-position: 0% 50%;
+            }
+            25% { 
+                transform: scale(1.05) rotate(2deg); 
+                background-position: 25% 50%;
+            }
+            50% { 
+                transform: scale(1.1) rotate(0deg); 
+                background-position: 50% 50%;
+            }
+            75% { 
+                transform: scale(1.05) rotate(-2deg); 
+                background-position: 75% 50%;
+            }
+        }
+    </style>
+    <style>
+        :root {
+            --primary: #2fbf71;
+            --secondary: #a7f3d0;
+            --accent: #fbbf24;
+            --dark: #0b1220;
+            --dark-2: #111c33;
+            --glass: rgba(255, 255, 255, 0.06);
+            --border: rgba(167, 243, 208, 0.28);
+            --muted: rgba(255, 255, 255, 0.72);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        
+        body { background: var(--dark); color: white; overflow-x: hidden; scroll-behavior: smooth; }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.10;
+            mix-blend-mode: overlay;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="220" height="220" filter="url(%23n)" opacity="0.35"/></svg>');
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.55) 100%);
+            opacity: 0.85;
+        }
+
+        .spotlight {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.65;
+            background: radial-gradient(circle at 50% 45%, rgba(167, 243, 208, 0.14), rgba(47, 191, 113, 0.06) 35%, transparent 60%);
+            transform: translate3d(0, 0, 0);
+            transition: opacity 300ms ease;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, var(--dark-2), var(--dark));
+            z-index: -1;
+        }
+
+        .animated-bg::before,
+        .animated-bg::after {
+            content: "";
+            position: absolute;
+            inset: -35vmax;
+            background:
+                radial-gradient(circle at 25% 35%, rgba(47, 191, 113, 0.22), transparent 55%),
+                radial-gradient(circle at 70% 25%, rgba(167, 243, 208, 0.18), transparent 52%),
+                radial-gradient(circle at 55% 75%, rgba(251, 191, 36, 0.14), transparent 55%);
+            filter: blur(26px);
+            transform: translate3d(0, 0, 0);
+            animation: auroraMove 16s ease-in-out infinite alternate;
+        }
+        .animated-bg::after {
+            inset: -45vmax;
+            opacity: 0.75;
+            animation-duration: 22s;
+            animation-direction: alternate-reverse;
+        }
+
+        @keyframes auroraMove {
+            0% { transform: translate3d(-1.5%, -1.2%, 0) scale(1); }
+            50% { transform: translate3d(1.4%, -0.8%, 0) scale(1.02); }
+            100% { transform: translate3d(0.8%, 1.2%, 0) scale(1.01); }
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            opacity: 0.9;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 999px;
+            background: rgba(167, 243, 208, 0.55);
+            box-shadow: 0 0 18px rgba(167, 243, 208, 0.25);
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            from { transform: translate3d(0, 0, 0); opacity: 0; }
+            12% { opacity: 0.85; }
+            90% { opacity: 0.65; }
+            to { transform: translate3d(0, -120vh, 0); opacity: 0; }
+        }
+
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at 40% 30%, rgba(167, 243, 208, 0.15), transparent 55%),
+                radial-gradient(circle at 70% 70%, rgba(251, 191, 36, 0.12), transparent 55%),
+                rgba(11, 18, 32, 0.96);
+            backdrop-filter: blur(14px);
+            transition: opacity 650ms ease, transform 650ms ease;
+        }
+        .intro.hidden {
+            opacity: 0;
+            transform: scale(1.01);
+            pointer-events: none;
+        }
+        .intro-inner {
+            text-align: center;
+            padding: 26px 22px;
+            max-width: 980px;
+        }
+        .intro-orb {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 18px auto;
+            border-radius: 999px;
+            position: relative;
+            background: radial-gradient(circle at 30% 30%, rgba(167, 243, 208, 0.65), rgba(47, 191, 113, 0.15) 55%, rgba(0, 0, 0, 0) 68%);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+                0 25px 80px rgba(47, 191, 113, 0.18),
+                0 25px 110px rgba(167, 243, 208, 0.12);
+            overflow: hidden;
+            animation: orbFloat 3.2s ease-in-out infinite;
+        }
+        .intro-orb::before {
+            content: "";
+            position: absolute;
+            inset: -40px;
+            background:
+                conic-gradient(from 180deg, rgba(47, 191, 113, 0.0), rgba(167, 243, 208, 0.55), rgba(251, 191, 36, 0.22), rgba(47, 191, 113, 0.0));
+            filter: blur(14px);
+            animation: spin 2.8s linear infinite;
+        }
+        .intro-orb::after {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 999px;
+            background: rgba(11, 18, 32, 0.55);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+        }
+        .intro-title {
+            font-size: clamp(2.6em, 6vw, 4.4em);
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95), rgba(251, 191, 36, 0.9));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .intro-sub {
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.9;
+            font-size: 1.15em;
+            margin: 0 auto;
+            max-width: 60ch;
+        }
+        .intro-loader {
+            height: 10px;
+            width: min(420px, 86vw);
+            margin: 22px auto 0 auto;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            overflow: hidden;
+        }
+        .intro-loader > span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95), rgba(251, 191, 36, 0.95));
+            animation: loading 1.55s ease forwards;
+        }
+        @keyframes loading { to { width: 100%; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes orbFloat {
+            0% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -8px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 1500;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .scroll-progress__bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95), rgba(251, 191, 36, 0.95));
+            box-shadow: 0 0 14px rgba(167, 243, 208, 0.18);
+            transform-origin: left;
+        }
+
+        .nav {
+            position: fixed; top: 0; width: 100%;
+            background: linear-gradient(135deg, rgba(11, 18, 32, 0.85) 0%, rgba(17, 28, 51, 0.85) 100%);
+            backdrop-filter: blur(25px) saturate(180%);
+            padding: 10px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(167, 243, 208, 0.15);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        }
+
+        .nav-logo {
+            font-size: 1.9em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2fbf71 0%, #a7f3d0 50%, #fbbf24 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: logoGradient 4s ease-in-out infinite;
+            letter-spacing: 1px;
+            filter: drop-shadow(0 0 20px rgba(47, 191, 113, 0.5));
+            position: relative;
+        }
+
+        .nav-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2fbf71, transparent);
+            animation: logoUnderline 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes logoUnderline {
+            0%, 100% { transform: scaleX(0); opacity: 0; }
+            50% { transform: scaleX(1); opacity: 1; }
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            overflow-x: auto;
+            padding: 8px 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(47, 191, 113, 0.5) transparent;
+        }
+        .nav-menu::-webkit-scrollbar {
+            height: 4px;
+        }
+        .nav-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .nav-menu::-webkit-scrollbar-thumb {
+            background: rgba(47, 191, 113, 0.5);
+            border-radius: 10px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover {
+            color: #a7f3d0;
+            background: linear-gradient(135deg, rgba(47, 191, 113, 0.25) 0%, rgba(167, 243, 208, 0.15) 100%);
+            border-color: rgba(167, 243, 208, 0.5);
+            box-shadow: 
+                0 8px 25px rgba(47, 191, 113, 0.4),
+                0 0 0 1px rgba(167, 243, 208, 0.2) inset;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .nav-item.active {
+            color: #2fbf71;
+            background: linear-gradient(135deg, rgba(47, 191, 113, 0.3) 0%, rgba(167, 243, 208, 0.2) 100%);
+            border-color: rgba(47, 191, 113, 0.6);
+            box-shadow: 
+                0 8px 30px rgba(47, 191, 113, 0.5),
+                0 0 0 1px rgba(47, 191, 113, 0.3) inset;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: #2fbf71;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(47, 191, 113, 0.8);
+        }
+
+        section { min-height: 100vh; padding: 100px 10%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        .title-gradient {
+            font-size: clamp(2.5em, 5vw, 4em); font-weight: 900;
+            background: linear-gradient(90deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95), rgba(251, 191, 36, 0.90), rgba(167, 243, 208, 0.95));
+            background-size: 220% 220%;
+            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-align: center; margin-bottom: 50px;
+            animation: gradientShift 7s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .section-subtitle {
+            text-align: center;
+            opacity: 0.92;
+            margin-top: -30px;
+            margin-bottom: 40px;
+            line-height: 1.9;
+            font-size: 1.1em;
+        }
+
+        .hero { text-align: center; }
+        .hero h1 { font-size: clamp(4em, 15vw, 8em); margin: 0; line-height: 1; }
+        .hero p { font-size: 1.5em; color: var(--secondary); margin-top: 20px; }
+
+        .hero-wrap {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 34px;
+            align-items: center;
+        }
+        .hero-left { text-align: right; }
+        .hero-right { display: grid; place-items: center; }
+
+        .app-tabs {
+            display: inline-flex;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.05);
+            margin-top: 18px;
+        }
+        .app-tab {
+            cursor: pointer;
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.82);
+            background: transparent;
+            transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+        }
+        .app-tab:hover { transform: translateY(-1px); }
+        .app-tab.active {
+            color: rgba(11, 18, 32, 0.96);
+            background: linear-gradient(90deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95));
+        }
+        .app-tab:focus-visible {
+            outline: 3px solid rgba(251, 191, 36, 0.45);
+            outline-offset: 3px;
+        }
+
+        .auto-hint {
+            margin-top: 10px;
+            font-size: 0.95em;
+            opacity: 0.72;
+            transition: opacity 240ms ease;
+        }
+        .auto-hint.hidden { opacity: 0; }
+
+        .phone {
+            width: min(360px, 92vw);
+            aspect-ratio: 9 / 19.5;
+            border-radius: 38px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow:
+                0 35px 120px rgba(0, 0, 0, 0.55),
+                0 0 0 8px rgba(255, 255, 255, 0.04) inset;
+            overflow: hidden;
+            position: relative;
+        }
+        .phone.float {
+            animation: phoneFloat 3.6s ease-in-out infinite;
+        }
+        @keyframes phoneFloat {
+            0% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -10px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+        .phone::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 25% 15%, rgba(167, 243, 208, 0.16), transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(251, 191, 36, 0.10), transparent 55%);
+            pointer-events: none;
+        }
+        .phone-notch {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44%;
+            height: 18px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            z-index: 3;
+        }
+
+        .screen-viewport {
+            position: absolute;
+            inset: 0;
+            padding: 18px 16px 14px 16px;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            align-content: start;
+            gap: 12px;
+            min-height: 0;
+        }
+        .appbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+        }
+        .app-title {
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+        .app-chip {
+            font-size: 0.88em;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.18);
+            color: rgba(255, 255, 255, 0.82);
+        }
+        .screen-stack {
+            position: relative;
+            height: auto;
+            align-self: stretch;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .app-screen {
+            position: absolute;
+            inset: 0;
+            padding: 10px 4px 0 4px;
+            opacity: 0;
+            transform: translate3d(34px, 0, 0) scale(0.995);
+            filter: blur(1.5px);
+            transition: opacity 420ms ease, transform 560ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 520ms ease;
+        }
+        .app-screen.active {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: blur(0);
+        }
+
+        .mock-header {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.20);
+        }
+        .mock-search {
+            flex: 1;
+            height: 34px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .mock-search::after {
+            content: "بحث…";
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-size: 0.9em;
+            opacity: 0.6;
+        }
+        .mock-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            display: grid;
+            place-items: center;
+            opacity: 0.85;
+        }
+
+        .mock-kpis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .mock-kpi {
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.18);
+        }
+        .mock-kpi b { display: block; font-size: 1.05em; margin-bottom: 4px; }
+        .mock-kpi span { font-size: 0.88em; opacity: 0.75; }
+
+        .mock-list {
+            margin-top: 10px;
+            display: grid;
+            gap: 10px;
+        }
+        .mock-item {
+            display: grid;
+            grid-template-columns: 42px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.18);
+        }
+        .mock-thumb {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+            background-size: 220% 100%;
+            animation: shimmer 2.2s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 0% 0; } 50% { background-position: 100% 0; } 100% { background-position: 0% 0; } }
+
+        .mock-meta {
+            display: grid;
+            gap: 4px;
+        }
+        .mock-title { font-weight: 900; font-size: 0.98em; }
+        .mock-sub { font-size: 0.86em; opacity: 0.72; line-height: 1.4; }
+
+        .mock-pill {
+            font-size: 0.82em;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            opacity: 0.95;
+            white-space: nowrap;
+        }
+        .mock-pill.ok { background: rgba(47, 191, 113, 0.16); border-color: rgba(47, 191, 113, 0.28); }
+        .mock-pill.warn { background: rgba(251, 191, 36, 0.14); border-color: rgba(251, 191, 36, 0.26); }
+        .mock-pill.bad { background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.24); }
+
+        .bottom-nav {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            height: 52px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.20);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.34);
+        }
+        .nav-dot.active { background: rgba(167, 243, 208, 0.85); box-shadow: 0 0 16px rgba(167, 243, 208, 0.25); }
+
+        .cta-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: 0;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            transition: transform 180ms ease, filter 180ms ease;
+        }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+        .btn-primary {
+            color: rgba(11, 18, 32, 0.96);
+            background: linear-gradient(90deg, rgba(167, 243, 208, 0.95), rgba(47, 191, 113, 0.95));
+        }
+        .btn-ghost {
+            color: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        @media (max-width: 980px) {
+            .hero-wrap { grid-template-columns: 1fr; }
+            .hero-left { text-align: center; }
+            .cta-row { justify-content: center; }
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+        .card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 30px; border-radius: 18px; transition: 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .card {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .card:hover { transform: translateY(-6px); border-color: rgba(167, 243, 208, 0.55); }
+        .card .tilt-shine {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.10), transparent 55%);
+            opacity: 0;
+            transition: opacity 200ms ease;
+            pointer-events: none;
+        }
+        .card.is-tilting .tilt-shine { opacity: 1; }
+        .card i { font-size: 2.6em; color: var(--secondary); margin-bottom: 18px; }
+        .card h3 { font-size: 1.35em; margin-bottom: 12px; color: white; }
+        .card p { font-size: 1em; line-height: 1.75; opacity: 0.92; color: var(--muted); }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 15%, rgba(167, 243, 208, 0.14), transparent 45%),
+                radial-gradient(circle at 75% 85%, rgba(251, 191, 36, 0.09), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+        }
+        .card:hover::after { opacity: 1; }
+
+        .card-list { list-style: none; margin-top: 15px; }
+        .card-list li { margin-bottom: 10px; position: relative; padding-right: 22px; opacity: 0.9; }
+        .card-list li::before { content: "▸"; position: absolute; right: 0; color: var(--accent); font-weight: bold; }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            margin: 6px 6px 0 0;
+            font-size: 0.95em;
+        }
+
+        section {
+            will-change: transform, opacity;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translate3d(0, 18px, 0);
+            transition: opacity 700ms ease, transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .reveal-stagger > .card,
+        .reveal-stagger > .step {
+            opacity: 0;
+            transform: translate3d(0, 14px, 0);
+            transition: opacity 650ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal-stagger.visible > .card,
+        .reveal-stagger.visible > .step {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .reveal-stagger.visible > .card:nth-child(1),
+        .reveal-stagger.visible > .step:nth-child(1) { transition-delay: 60ms; }
+        .reveal-stagger.visible > .card:nth-child(2),
+        .reveal-stagger.visible > .step:nth-child(2) { transition-delay: 120ms; }
+        .reveal-stagger.visible > .card:nth-child(3),
+        .reveal-stagger.visible > .step:nth-child(3) { transition-delay: 180ms; }
+        .reveal-stagger.visible > .card:nth-child(4),
+        .reveal-stagger.visible > .step:nth-child(4) { transition-delay: 240ms; }
+
+        section::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 400ms ease; background: radial-gradient(circle at 50% 35%, rgba(255,255,255,0.08), transparent 55%); }
+        section.is-active::before { opacity: 1; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
+            html { scroll-behavior: auto; }
+            .grain, .vignette, .spotlight { display: none !important; }
+        }
+
+        .kpi { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; opacity: 0.95; }
+        .kpi strong { color: var(--primary); }
+
+        .code-box {
+            background: rgba(0, 0, 0, 0.35); border-radius: 14px; padding: 18px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            border: 1px solid rgba(255, 255, 255, 0.14); margin-top: 20px;
+            direction: ltr; text-align: left; overflow-x: auto;
+        }
+        .code-tag { color: var(--accent); }
+        .code-val { color: var(--primary); }
+
+        .timeline { border-right: 3px solid var(--border); padding-right: 30px; }
+        .step { position: relative; margin-bottom: 40px; }
+        .step::after {
+            content: ""; position: absolute; right: -38px; top: 0;
+            width: 14px; height: 14px; background: var(--accent); border-radius: 50%;
+            box-shadow: none;
+        }
+
+        .role-badge {
+            display: inline-block; padding: 5px 15px; border-radius: 20px;
+            background: rgba(167, 243, 208, 0.14);
+            border: 1px solid rgba(167, 243, 208, 0.35);
+            color: var(--secondary);
+            font-weight: 700;
+            margin: 5px;
+        }
+
+        .mockup-notice {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            border: 1px dashed rgba(167, 243, 208, 0.4);
+        }
+
+        .chapter {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px auto;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--muted);
+            max-width: fit-content;
+            font-size: 0.95em;
+        }
+        .evidence {
+            direction: ltr;
+            text-align: left;
+            font-size: 0.92em;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.22);
+            margin-top: 12px;
+            opacity: 0.95;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.5;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) { 
+            .nav { padding: 15px; } 
+            .nav-menu { display: none; }
+            section { padding: 80px 5%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Improved Splash Screen with Website Colors -->
+    <div class="splash-screen" id="splashScreen">
+        <!-- Animated Background -->
+        <div class="splash-bg-animation"></div>
+
+        <!-- Floating Particles -->
+        <div class="splash-particles-container" id="splashParticles"></div>
+
+        <!-- Floating Stars -->
+        <div id="splashStars"></div>
+
+        <!-- Floating Circles -->
+        <div id="splashCircles"></div>
+
+        <!-- Logo Container -->
+        <div class="splash-logo-container">
+            <!-- Orbiting Elements -->
+            <div class="splash-orbit"></div>
+            <div class="splash-orbit splash-orbit-2"></div>
+
+            <!-- Logo Circle -->
+            <div class="splash-logo-circle">
+                <div class="splash-logo-icon">🍽️</div>
+            </div>
+        </div>
+
+        <!-- Main Text -->
+        <div class="splash-text">نَفَس</div>
+
+        <!-- Tagline -->
+        <div class="splash-tagline">تذوّق نفس المنزل</div>
+
+        <!-- Space Hint -->
+        <div class="splash-space-hint">اضغط Space للإخفاء</div>
+
+        <!-- Loading Dots -->
+        <div class="splash-loading">
+            <div class="splash-dot"></div>
+            <div class="splash-dot"></div>
+            <div class="splash-dot"></div>
+        </div>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+    <div class="animated-bg"></div>
+    <div class="particles" aria-hidden="true"></div>
+
+    <div class="intro" id="intro" aria-hidden="true">
+        <div class="intro-inner">
+            <div class="intro-orb" aria-hidden="true"></div>
+            <div class="intro-title">NAFAS</div>
+            <p class="intro-sub">عرض مشروع التخرج — تجربة تقديمية تركز على التنظيم، الهندسة البرمجية، وربط الميزات بالكود.</p>
+            <div class="intro-loader" aria-hidden="true"><span></span></div>
+        </div>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__bar" id="scrollBar"></div></div>
+    
+    <nav class="nav">
+        <div class="nav-logo">NAFAS</div>
+        <ul class="nav-menu">
+            <li><a href="#hero" class="nav-item">الرئيسية</a></li>
+            <li><a href="#overview" class="nav-item">نظرة عامة</a></li>
+            <li><a href="#highlights" class="nav-item">أبرز الإنجازات</a></li>
+            <li><a href="#scope" class="nav-item">نطاق المشروع</a></li>
+            <li><a href="#requirements" class="nav-item">المتطلبات</a></li>
+            <li><a href="#architecture" class="nav-item">هيكلة المشروع</a></li>
+            <li><a href="#data-model" class="nav-item">قاعدة البيانات</a></li>
+            <li><a href="#features" class="nav-item">المميزات</a></li>
+            <li><a href="#orders" class="nav-item">الطلبات</a></li>
+            <li><a href="#admin" class="nav-item">الأدمن</a></li>
+            <li><a href="#notifications" class="nav-item">الإشعارات</a></li>
+            <li><a href="#deployment" class="nav-item">الأمان والنشر</a></li>
+            <li><a href="#demo" class="nav-item">سيناريو العرض</a></li>
+            <li><a href="#challenges" class="nav-item">التحديات</a></li>
+            <li><a href="#team" class="nav-item">توزيع المهام</a></li>
+            <li><a href="#qa" class="nav-item">أسئلة متوقعة</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div class="container hero-wrap">
+            <div class="hero-left">
+                <h1 class="title-gradient" style="text-align: right; margin-bottom: 16px;">NAFAS</h1>
+                <p style="font-size: 1.35em; color: rgba(255,255,255,0.88); line-height: 1.9;">نفس الفكرة… ولكن بصياغة عرض تُحاكي تجربة التطبيق: أدوار متعددة + تدفقات لحظية + إدارة المطبخ + إدارة الطلبات + لوحة تحكّم الأدمن.</p>
+                <div class="app-tabs" role="tablist" aria-label="تجربة الأدوار">
+                    <button class="app-tab active" type="button" data-role="customer">Customer</button>
+                    <button class="app-tab" type="button" data-role="chef">Chef</button>
+                    <button class="app-tab" type="button" data-role="admin">Admin</button>
+                </div>
+                <div class="auto-hint" id="autoHint">معاينة تلقائية: يتم التنقّل بين الأدوار…</div>
+                <div class="cta-row">
+                    <button class="btn btn-primary" type="button" onclick="document.querySelector('#overview').scrollIntoView({behavior:'smooth'})">ابدأ العرض</button>
+                    <button class="btn btn-ghost" type="button" onclick="document.querySelector('#demo').scrollIntoView({behavior:'smooth'})">سيناريو الديمو</button>
+                </div>
+                <div style="margin-top: 18px; opacity: 0.92; line-height: 2;">
+                    <span class="badge">50 - 70 دقيقة</span>
+                    <span class="badge">+ أسئلة</span>
+                    <span class="badge">+ Demo</span>
+                </div>
+            </div>
+
+            <div class="hero-right" aria-hidden="true">
+                <div class="phone" id="phone">
+                    <div class="phone-notch"></div>
+                    <div class="screen-viewport">
+                        <div class="appbar">
+                            <div class="app-title">NAFAS</div>
+                            <div class="app-chip" id="roleChip">Customer</div>
+                        </div>
+
+                        <div class="screen-stack">
+                            <div class="app-screen active" data-screen="customer">
+                                <div class="mock-header">
+                                    <div class="mock-icon">☰</div>
+                                    <div class="mock-search"></div>
+                                    <div class="mock-icon">🔔</div>
+                                </div>
+                                <div class="mock-list">
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">مندي</div><div class="mock-sub">الأعلى تقييماً • جاهز خلال 25 دقيقة</div></div>
+                                        <div class="mock-pill ok">متاح</div>
+                                    </div>
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">كبسة</div><div class="mock-sub">طاهٍ قريب • تحضير اليوم</div></div>
+                                        <div class="mock-pill warn">كمية محدودة</div>
+                                    </div>
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">علبة حلويات</div><div class="mock-sub">جديد • تم رفع 6 صور</div></div>
+                                        <div class="mock-pill">إضافة</div>
+                                    </div>
+                                </div>
+                                <div class="bottom-nav" aria-hidden="true">
+                                    <div class="nav-dot active"></div>
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot"></div>
+                                </div>
+                            </div>
+                            <div class="app-screen" data-screen="chef">
+                                <div class="mock-header">
+                                    <div class="mock-icon">🍳</div>
+                                    <div class="mock-search"></div>
+                                    <div class="mock-icon">⚙️</div>
+                                </div>
+                                <div class="mock-kpis">
+                                    <div class="mock-kpi"><b>حالة المتجر</b><span>تبديل (مفتوح/مغلق)</span></div>
+                                    <div class="mock-kpi"><b>رفع الصور</b><span>Future.wait (6 images)</span></div>
+                                </div>
+                                <div class="mock-list">
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">طلب وارد</div><div class="mock-sub">الحالة: قيد المراجعة → تم القبول</div></div>
+                                        <div class="mock-pill warn">قيد المراجعة</div>
+                                    </div>
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">ملف المطبخ</div><div class="mock-sub">تم تحديث صورة الغلاف</div></div>
+                                        <div class="mock-pill ok">تم الحفظ</div>
+                                    </div>
+                                </div>
+                                <div class="bottom-nav" aria-hidden="true">
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot active"></div>
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot"></div>
+                                </div>
+                            </div>
+                            <div class="app-screen" data-screen="admin">
+                                <div class="mock-header">
+                                    <div class="mock-icon">🛡️</div>
+                                    <div class="mock-search"></div>
+                                    <div class="mock-icon">📩</div>
+                                </div>
+                                <div class="mock-list">
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">طلب اشتراك</div><div class="mock-sub">الخطة: شهرية • بانتظار الإجراء</div></div>
+                                        <div class="mock-pill warn">مراجعة</div>
+                                    </div>
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">تحديث دفعي</div><div class="mock-sub">users + requests بشكل ذري</div></div>
+                                        <div class="mock-pill ok">اعتماد</div>
+                                    </div>
+                                    <div class="mock-item">
+                                        <div class="mock-thumb"></div>
+                                        <div class="mock-meta"><div class="mock-title">إرسال إشعار</div><div class="mock-sub">FCM موجّه للطاهي</div></div>
+                                        <div class="mock-pill">إرسال</div>
+                                    </div>
+                                </div>
+                                <div class="bottom-nav" aria-hidden="true">
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot"></div>
+                                    <div class="nav-dot active"></div>
+                                    <div class="nav-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="overview">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-book"></i> الفصل 1: لماذا المشروع مهم؟</div>
+            <h2 class="title-gradient">نظرة عامة على المشروع</h2>
+            <p class="section-subtitle">ملخص سريع يوضح ماذا بنينا، لماذا بنيناه، وما القيمة التقنية التي تميز المشروع.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>المشكلة</h3>
+                    <p>صعوبة وصول الأسر المنتجة/الطهاة المنزليين إلى العملاء بشكل منظم، وغياب منصة توفر إدارة منتجات + طلبات + متابعة حالة + إشعارات + رقابة.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>الحل</h3>
+                    <p>منصة (Customer / Chef / Admin) في تطبيق واحد مبني بـ Flutter، مع Backend سحابي (Firebase) ورفع صور عبر Cloudinary، وتحديث لحظي عبر Streams.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-medal"></i>
+                    <h3>القيمة الهندسية (Software Engineering)</h3>
+                    <p>تنظيم كود بمعايير Clean Architecture + تطبيق SRP/DRY + عزل صلاحيات + تدفقات Real-time + جاهزية للنشر (Signing/Keystore).</p>
+                </div>
+            </div>
+            <div class="code-box">
+                <span class="code-tag">// أهم تقنيات المشروع</span><br>
+                Flutter + Provider + Firebase Auth/Firestore/Storage + FCM + Cloudinary + ImagePicker/Cropper
+            </div>
+        </div>
+    </section>
+
+    <section id="highlights">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-chart-simple"></i> الفصل 2: ماذا أنجزنا فعلياً؟</div>
+            <h2 class="title-gradient">أبرز الإنجازات (تُظهر حجم العمل)</h2>
+            <p class="section-subtitle">هذه النقاط مصممة لإبراز جهد الفريق بشكل واضح: ميزات مكتملة + تدفقات لحظية + تحديثات ذرّية + رفع صور + إشعارات.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-users"></i>
+                    <h3>نظام أدوار وصلاحيات</h3>
+                    <p>ثلاثة أدوار داخل تطبيق واحد (Customer / Chef / Admin) مع تجربة مستخدم مختلفة لكل دور.</p>
+                    <div class="evidence">lib/features/product/presentation/providers/auth_provider.dart</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-bell"></i>
+                    <h3>إشعارات موجهة من الأدمن</h3>
+                    <p>إرسال إشعار للشيف عند قبول/رفض الاشتراك مع رسالة واضحة للمستخدم.</p>
+                    <div class="evidence">lib/features/product/presentation/view/pages/Admin/admin_subscription_requests_page.dart</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-images"></i>
+                    <h3>رفع صور متعددة بجودة محسّنة</h3>
+                    <p>اختيار عدة صور + قص + ضغط جودة + رفع متوازي إلى Cloudinary ثم حفظ روابط آمنة داخل Firestore.</p>
+                    <div class="evidence">lib/features/product/presentation/view/pages/chef/add_product_page.dart</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-store"></i>
+                    <h3>إدارة بيانات المطبخ</h3>
+                    <p>تعديل اسم المطبخ/الفئة/الهاتف + حالة المطبخ مفتوح/مغلق + رفع صورة الغلاف.</p>
+                    <div class="evidence">lib/features/product/presentation/view/pages/chef/edit_kitchen_info.dart</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="scope">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-user"></i> الفصل 3: نطاق المشروع والأطراف المستفيدة</div>
+            <h2 class="title-gradient">نطاق المشروع والأطراف المستفيدة</h2>
+            <p class="section-subtitle">تحديد نطاق العمل ومن هم المستخدمون، وما الذي يتضمنه النظام وما الذي لا يتضمنه.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-user"></i>
+                    <h3>العميل (Customer)</h3>
+                    <p>تصفح المنتجات، إنشاء طلب، متابعة الحالة، استلام إشعارات، وإدارة بيانات الحساب.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>الشيف (Chef)</h3>
+                    <p>إدارة المطبخ والمنتجات، رفع صور متعددة، استقبال الطلبات وتحديث حالتها، وإحصائيات.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>الأدمن (Admin)</h3>
+                    <p>مراجعة طلبات الاشتراك، قبول/رفض مع سبب، إشعارات، وتحديث حالة المتجر للطهاة.</p>
+                </div>
+            </div>
+            <div class="code-box">
+                <span class="code-tag">// خارج النطاق (أفكار مستقبلية)</span><br>
+                بوابات دفع حقيقية، تتبع GPS للتوصيل، نظام مندوب، Chat مباشر.
+            </div>
+        </div>
+    </section>
+
+    <section id="requirements">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-list-check"></i> الفصل 4: المتطلبات والجودة</div>
+            <h2 class="title-gradient">متطلبات المشروع</h2>
+            <p class="section-subtitle">متطلبات وظيفية وغير وظيفية لتوضيح حجم الإنجاز وجودة التطبيق.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-list-check"></i>
+                    <h3>متطلبات وظيفية (Functional)</h3>
+                    <ul class="card-list">
+                        <li>تسجيل/تسجيل دخول + إدارة جلسة المستخدم.</li>
+                        <li>نظام أدوار وصلاحيات (Admin/Chef/Customer).</li>
+                        <li>CRUD للمنتجات + التحكم في توفر المنتج.</li>
+                        <li>إنشاء الطلبات + تحديث حالة الطلب + أرشفة.</li>
+                        <li>طلبات اشتراك: قبول/رفض + سبب + إشعارات.</li>
+                        <li>رفع صور متعددة + قص/جودة + حد أقصى.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-shield"></i>
+                    <h3>متطلبات غير وظيفية (Non‑Functional)</h3>
+                    <ul class="card-list">
+                        <li>Security: عزل البيانات وقواعد Firestore.</li>
+                        <li>Maintainability: SRP/DRY + Layers.</li>
+                        <li>Reliability: try/catch + رسائل أخطاء واضحة.</li>
+                        <li>Performance: ضغط الصور + رفع متوازي.</li>
+                        <li>Scalability: تصميم Collections قابل للتوسع.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-stopwatch"></i>
+                    <h3>المدة الزمنية للمشروع</h3>
+                    <p>تم إنجاز المشروع وفق منهجية هندسية شملت: تحليل المتطلبات، بناء الهيكلية، تطوير الميزات (Customer/Chef/Admin)، ثم الاختبار والتحسين النهائي.</p>
+                    <div class="kpi"><span>مراحل هندسية</span><strong>4 مراحل</strong></div>
+                    <div class="kpi"><span>مدة استكمال المشروع</span><strong>6 أسابيع</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-sitemap"></i> الفصل 5: الهيكلة والتنظيم</div>
+            <h2 class="title-gradient">الهيكلة (Architecture) وجودة الشفرة البرمجية</h2>
+            <p class="section-subtitle">كيف ضمنّا جودة الشفرة البرمجية؟ كيف فصلنا UI/Logic/Data؟ وكيف انعكس ذلك على تسريع تطوير الـ Features؟</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Single Responsibility</h3>
+                    <p>تم تقسيم الكود وفق مبدأ Single Responsibility (SRP) لضمان أن كل كلاس مسؤول عن وظيفة واحدة فقط، مما يسهل الصيانة والاختبار.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-folder-tree"></i>
+                    <h3>Clean Structure</h3>
+                    <p>هيكل المجلدات يتبع معايير Clean Architecture: طبقة الـ Data (Models/Repo Impl)، وطبقة الـ Domain (Contracts/Entities)، وطبقة الـ Presentation (UI/Providers).</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>DRY Principle</h3>
+                    <p>تطبيق مبدأ DRY عبر Core Widgets موحدة + ثوابت تصميم (Colors/Styles) لتقليل التكرار وتسهيل التحديث الشامل.</p>
+                </div>
+            </div>
+            <div class="code-box">
+                <span class="code-tag">// هيكل المجلدات (Clean Architecture)</span><br>
+                lib/<br>
+                ├── core/ <span class="code-val">// Shared logic, themes, constants</span><br>
+                ├── features/<br>
+                │   └── product/<br>
+                │       ├── data/ <span class="code-val">// Data Sources & Repo Implementations</span><br>
+                │       ├── domain/ <span class="code-val">// Entities & Abstract Repositories</span><br>
+                │       └── presentation/ <span class="code-val">// ViewModels (Providers) & UI Pages</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="data-model">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-database"></i> الفصل 6: نموذج البيانات</div>
+            <h2 class="title-gradient">نموذج البيانات (Firestore)</h2>
+            <p class="section-subtitle">تفصيل الـ Collections الرئيسية وما الهدف منها وكيف يتم ربطها بالأدوار والصلاحيات.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-database"></i>
+                    <h3>users</h3>
+                    <p>معلومات المستخدم + الدور + بيانات المطبخ + حالة الاشتراك + حالة طلب الشيف.</p>
+                    <ul class="card-list">
+                        <li>role / uid / displayName / phoneNumber</li>
+                        <li>chefRequestStatus / chefRequestMessage</li>
+                        <li>restaurantName / category / isAvailable / coverImageUrl</li>
+                        <li>isSubscribed / subscriptionType / subscriptionExpiry</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>products</h3>
+                    <p>كل منتج مرتبط بـ chefId ويحتوي صور متعددة (imageUrls) وسعر وتوفر وتصنيف.</p>
+                    <ul class="card-list">
+                        <li>chefId + chefName</li>
+                        <li>imageUrls (حتى 6)</li>
+                        <li>price + isAvailable + createdAt</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-receipt"></i>
+                    <h3>orders</h3>
+                    <p>طلبات مرتبطة بالشيف ويتم تحديثها لحظياً عبر Streams، مع status + timestamps.</p>
+                    <ul class="card-list">
+                        <li>status: pending / accepted / completed</li>
+                        <li>updatedAt + acceptedAt + completedAt</li>
+                        <li>totalPrice + items + customerId</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-id-card"></i>
+                    <h3>subscription_requests</h3>
+                    <p>طلبات الاشتراك التي يراجعها الأدمن: status + planType + expiryDate + rejectReason.</p>
+                    <ul class="card-list">
+                        <li>approve/reject عبر Firestore batch</li>
+                        <li>حفظ سبب الرفض وإشعار المستخدم</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="code-box">
+                <span class="code-tag">// ملاحظة هندسية</span><br>
+                استخدمنا تحديثات Batch في الأدمن لمنع "نصف تحديث" بين وثيقة الطلب ووثيقة المستخدم.
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-play"></i> الفصل 7: رحلة تنفيذ المميزات</div>
+            <h2 class="title-gradient">رحلة تنفيذ المميزات (Features)</h2>
+            <div class="timeline">
+                <div class="step">
+                    <h3>1. Core System & Role-Based Auth</h3>
+                    <p>Firebase Auth + AuthProvider يستمع لحالة تسجيل الدخول ويجلب UserModel من Firestore، ويعمل Listener على وثيقة المستخدم لتحديث الواجهات لحظياً.</p>
+                </div>
+                <div class="step">
+                    <h3>2. Kitchen Management (Chef)</h3>
+                    <p>تعديل بيانات المطبخ + حالة Open/Closed + رفع صورة الغلاف عبر Cloudinary ثم تحديث Firestore في نفس الشاشة.</p>
+                </div>
+                <div class="step">
+                    <h3>3. Dynamic Marketplace (Customer)</h3>
+                    <p>تصفح ذكي للمنتجات، نظام تصنيفات، وعربة تسوق تدعم الطلب من عدة طباخين في وقت واحد.</p>
+                </div>
+                <div class="step" style="border: 2px solid var(--primary); padding: 20px; border-radius: 15px; background: rgba(0, 255, 136, 0.05);">
+                    <h3 style="color: var(--primary);">4. نظام الطلبات المتقدم (الميزة الختامية)</h3>
+                    <p>ميزة الطلبات هي قلب المشروع: إنشاء الطلب وتخزينه، ثم متابعة الحالة لحظياً عبر Streams لكل دور، مع timestamps وإشعارات عند التحديث.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="orders">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-receipt"></i> الفصل 8: نظام الطلبات</div>
+            <h2 class="title-gradient">تفاصيل نظام الطلبات (Deep Dive)</h2>
+            <p class="section-subtitle">شرح معماري تفصيلي لنظام الطلبات: حالات، تزامن، تحديثات، وإدارة الأخطاء.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-diagram-project"></i>
+                    <h3>دورة حياة الطلب</h3>
+                    <p>الحالة تُخزن كنص (status.name) وتُحدّث مع updatedAt، وعند قبول الطلب أو إكماله يتم حفظ acceptedAt/completedAt.</p>
+                    <div class="code-box">
+                        <span class="code-tag">lifecycle</span><br>
+                        pending → accepted → completed
+                    </div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-arrows-rotate"></i>
+                    <h3>التحديث اللحظي (Streams)</h3>
+                    <p>الشيف يشاهد الطلبات عبر getChefOrdersStream(chefId) بحيث يتم تحديث القائمة مباشرة عند أي تغيير في Firestore.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <h3>الاعتمادية</h3>
+                    <p>try/catch ورسائل واضحة، وترتيب الطلبات حسب createdAt لضمان رؤية الأحدث أولاً.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-user-shield"></i> الفصل 9: الأدمن والتحكم</div>
+            <h2 class="title-gradient">لوحة الأدمن (الاشتراكات)</h2>
+            <p class="section-subtitle">قبول/رفض طلبات الاشتراك يتم بشكل آمن وذري عبر Firestore Batch لضمان عدم حدوث نصف تحديث.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>تحديث ذري (Batch)</h3>
+                    <p>عند القبول: تحديث subscription_requests + users في نفس العملية ثم commit.</p>
+                    <ul class="card-list">
+                        <li>status = approved</li>
+                        <li>startDate / expiryDate</li>
+                        <li>storeStatus = active</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-circle-check"></i>
+                    <h3>قبول + إشعار</h3>
+                    <p>بعد commit يتم إرسال إشعار للشيف بنجاح التفعيل عبر NotificationService.sendAdminNotification.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-circle-xmark"></i>
+                    <h3>رفض + سبب</h3>
+                    <p>رفض الطلب مع سبب يتم حفظه في الطلب والمستخدم، ثم إرسال إشعار يوضح السبب.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="notifications">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-bell"></i> الفصل 10: الإشعارات</div>
+            <h2 class="title-gradient">الإشعارات (FCM)</h2>
+            <p class="section-subtitle">نظام إشعارات متكامل يربط الأدوار الثلاثة: إشعارات تلقائية للطلبات، إشعارات موجهة من الأدمن، وإشعارات البث.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-fingerprint"></i>
+                    <h3>تحديث Token</h3>
+                    <p>عند تسجيل الدخول يقوم AuthProvider باستدعاء NotificationService.updateToken لضمان وصول إشعارات الحساب الصحيح.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-robot"></i>
+                    <h3>إشعارات تلقائية للطلبات</h3>
+                    <p>عند إنشاء طلب جديد، يتم إرسال إشعارات تلقائية للشيفات (لإعلامهم بالطلب)، للأدمن (للمتابعة)، وللعميل (للتأكيد).</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <h3>إشعارات موجهة من الأدمن</h3>
+                    <p>الأدمن يرسل إشعارات موجهة للشيف عند قبول/رفض الاشتراك أو طلب الانضمام، مع حفظ سجل في admin_notifications.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>إشعارات البث</h3>
+                    <p>الأدمن يمكنه إرسال إشعارات بث لمجموعة محددة (العملاء، الشيفات، الأدمنات) عبر sendBroadcastNotification.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-tag"></i>
+                    <h3>إشعارات مباشرة</h3>
+                    <p>الأدمن يمكنه إرسال إشعار مباشر لمستخدم محدد عبر sendPushNotification باستخدام توكنه.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-shield"></i>
+                    <h3>عزل المسؤوليات</h3>
+                    <p>المنطق موجود داخل Service وليس في UI، مما يحقق SRP ويسهل إعادة الاستخدام.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="deployment">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-shield-halved"></i> الفصل 11: الأمان والنشر</div>
+            <h2 class="title-gradient">الأمان والنشر (غير مطبق)</h2>
+            <p class="section-subtitle">هذا الفصل يمثل خطة مستقبلية للأمان والنشر، لكن لم يتم تطبيقه في المشروع الحالي.</p>
+            <div class="grid">
+                <div class="card" style="border: 2px dashed rgba(255, 193, 7, 0.5); background: rgba(255, 193, 7, 0.05);">
+                    <i class="fas fa-clock" style="color: #fbbf24;"></i>
+                    <h3>Keystore & Signing (غير مطبق)</h3>
+                    <p>لم يتم إعداد مفاتيح التوقيع (Keystore) بعد، التطبيق حالياً يعمل في وضع Debug.</p>
+                    <ul class="card-list">
+                        <li>إنشاء keystore وإبقاؤها خارج Git</li>
+                        <li>ربطها بملف gradle لنسخة Release</li>
+                        <li>إدارة كلمات المرور عبر بيئة آمنة (ENV)</li>
+                    </ul>
+                </div>
+                <div class="card" style="border: 2px dashed rgba(255, 193, 7, 0.5); background: rgba(255, 193, 7, 0.05);">
+                    <i class="fas fa-clock" style="color: #fbbf24;"></i>
+                    <h3>خطوات النشر (غير مطبق)</h3>
+                    <p>لم يتم نشر التطبيق على المتاجر بعد، يعمل حالياً على Emulator فقط.</p>
+                    <ul class="card-list">
+                        <li>إنتاج AAB للأندرويد و IPA للـ iOS</li>
+                        <li>تجربة إصدار تجريبي عبر TestFlight</li>
+                        <li>مراجعة الإصدارات وتوثيق التغييرات</li>
+                    </ul>
+                </div>
+                <div class="card" style="border: 2px dashed rgba(255, 193, 7, 0.5); background: rgba(255, 193, 7, 0.05);">
+                    <i class="fas fa-clock" style="color: #fbbf24;"></i>
+                    <h3>App Signature (غير مطبق)</h3>
+                    <p>لم يتم استخدام Application Signature بعد، التطبيق غير موقع رسمياً.</p>
+                    <ul class="card-list">
+                        <li>حماية ملكية التطبيق على المتجر</li>
+                        <li>منع أي جهة من رفع تحديث باسم التطبيق دون توقيع صحيح</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="card" style="border: 2px dashed rgba(255, 193, 7, 0.5); background: rgba(255, 193, 7, 0.05);">
+                    <i class="fas fa-clock" style="color: #fbbf24;"></i>
+                    <h3>CI/CD (غير مطبق)</h3>
+                    <p>لم يتم إعداد CI/CD بعد، البناء يتم يدوياً على الأجهزة المحلية.</p>
+                    <ul class="card-list">
+                        <li>تحليل الكود + فحص التنسيق</li>
+                        <li>Build Android Release</li>
+                        <li>تجهيز iOS build عبر خدمة سحابية عند عدم توفر Mac</li>
+                    </ul>
+                </div>
+                <div class="card" style="border: 2px dashed rgba(255, 193, 7, 0.5); background: rgba(255, 193, 7, 0.05);">
+                    <i class="fas fa-clock" style="color: #fbbf24;"></i>
+                    <h3>بناء iOS دون Mac (غير مطبق)</h3>
+                    <p>لم يتم استخدام Codemagic/Appcircle بعد، iOS build غير متوفر.</p>
+                </div>
+                <div class="card" style="border: 2px solid rgba(47, 191, 113, 0.5); background: rgba(47, 191, 113, 0.1);">
+                    <i class="fas fa-check-circle" style="color: #2fbf71;"></i>
+                    <h3>ملاحظات أمنية (مطبق)</h3>
+                    <p>تم تطبيق الإجراءات الأمنية الأساسية في المشروع الحالي.</p>
+                    <ul class="card-list">
+                        <li>اعتماد قواعد Firestore Security Rules</li>
+                        <li>عزل البيانات حسب الدور/uid</li>
+                        <li>عدم تضمين Secrets ضمن الشفرة البرمجية</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-play"></i> الفصل 12: الديمو</div>
+            <h2 class="title-gradient">سيناريو الديمو (Live Demo)</h2>
+            <p class="section-subtitle">سيناريو عرض منظم: يضمن نجاح العرض حتى لو واجهنا بطء في الشبكة أو emulator.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-user"></i>
+                    <h3>رحلة العميل (5-7 دقائق)</h3>
+                    <ul class="card-list">
+                        <li>تسجيل دخول Customer</li>
+                        <li>تصفح المنتجات + اختيار طبق</li>
+                        <li>إنشاء Order ثم عرض الحالة</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-kitchen-set"></i>
+                    <h3>رحلة الشيف (7-10 دقائق)</h3>
+                    <ul class="card-list">
+                        <li>تعديل بيانات المطبخ + Open/Closed</li>
+                        <li>إضافة منتج بصور متعددة (Cloudinary)</li>
+                        <li>استلام الطلب وتحديث status</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>رحلة الأدمن (5-7 دقائق)</h3>
+                    <ul class="card-list">
+                        <li>فتح subscription_requests</li>
+                        <li>Approve/Reject مع سبب</li>
+                        <li>ملاحظة الإشعار الذي يصل للطرف الآخر</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="code-box">
+                <span class="code-tag">// تجهيزات قبل العرض</span><br>
+                1) لابتوب واحد على الأقل فيه Emulator شغال + حسابات جاهزة (Admin/Chef/Customer)<br>
+                2) بيانات تجريبية موجودة في Firestore (Products/Orders)<br>
+                3) اتصال إنترنت مستقر أو خطة بديلة لعرض بيانات مخزنة
+            </div>
+        </div>
+    </section>
+
+    <section id="challenges">
+        <div class="container">
+            <div class="chapter"><i class="fas fa-wrench"></i> الفصل 13: تحديات تقنية وحلول هندسية</div>
+            <h2 class="title-gradient">تحديات واقعية (تُظهر المجهود المبذول)</h2>
+            <p class="section-subtitle">أمثلة عملية توضّح كيف واجهنا تعقيدات البرمجة وحللناها عبر حلول منظمة ومستقرة.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-rotate"></i>
+                    <h3>1. تحدي: تزامن بيانات المستخدم</h3>
+                    <p><strong>المشكلة:</strong> عند تغيير دور المستخدم أو قبول اشتراكه، كانت الواجهات تتطلب إعادة تشغيل التطبيق لتحديث الصلاحيات.</p>
+                    <p><strong>الحل:</strong> تفعيل الـ <code>Listener</code> داخل <code>AuthProvider</code> لمراقبة وثيقة المستخدم في Firestore لحظياً، مما يجعل التطبيق يستجيب لأي تغيير في الصلاحيات دون تدخل المستخدم.</p>
+                    <div class="evidence">AuthProvider: _startUserDocListener</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>2. تحدي: سلامة البيانات (Data Integrity)</h3>
+                    <p><strong>المشكلة:</strong> عند قبول اشتراك الشيف، نحتاج لتحديث حالته في "طلبات الاشتراك" وفي "بيانات المستخدم" في نفس الوقت، وحدوث خطأ في أحدهما قد يسبب تعارضاً.</p>
+                    <p><strong>الحل:</strong> استخدام <code>WriteBatch</code> لضمان تنفيذ العمليتين معاً بشكل "ذري" (Atomic)؛ إما أن ينجح التحديث للطرفين أو يفشل للكل، لضمان استقرار قاعدة البيانات.</p>
+                    <div class="evidence">AdminSubscriptionRequestsPage: batch.commit()</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-images"></i>
+                    <h3>3. تحدي: أداء رفع الوسائط المتعددة</h3>
+                    <p><strong>المشكلة:</strong> رفع 6 صور عالية الجودة واحدة تلو الأخرى يسبب بطءاً شديداً وتجربة مستخدم سيئة.</p>
+                    <p><strong>الحل:</strong> استخدام <code>Future.wait</code> لتنفيذ عمليات الرفع إلى Cloudinary بشكل متوازٍ (Parallel)، مما قلل وقت الانتظار بنسبة تزيد عن 60% مع إضافة ضغط وقص للصور قبل الرفع.</p>
+                    <div class="evidence">AddProductPage: Future.wait(uploadTasks)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="container">
+            <h2 class="title-gradient">توزيع مهام الفريق</h2>
+            <p class="section-subtitle">هذا هو تقسيم العمل الحقيقي داخل فريق نَفَس كما تم تنفيذه أثناء تطوير الشفرة البرمجية، مع توزيع واضح لأجزاء العرض والديمو.</p>
+            <div class="grid">
+                <div class="card">
+                    <span class="role-badge">معاذ</span>
+                    <h3>Leader + Backend + Deployment</h3>
+                    <p>مسؤول عن قيادة الفريق، وربط أجزاء النظام، والمهام الخلفية (Firebase/Repositories) وتجهيز النشر.</p>
+                    <ul class="card-list">
+                        <li>في العرض: نظرة عامة + نطاق المشروع + المتطلبات + النشر/Signing + خطة CI/CD</li>
+                        <li>في الديمو: تأكيد تشغيل المشروع على Emulator وحسابات جاهزة</li>
+                        <li>نقطة تقنية: تدفقات البيانات + Repositories + Order logic (حسب التنفيذ)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="role-badge">مريم</span>
+                    <h3>واجهات الشيف (Chef UI)</h3>
+                    <p>مسؤولة عن بناء وتجهيز شاشات الشيف وتجربة استخدامها (إضافة منتج، تعديل بيانات المطبخ، استقبال الطلبات).</p>
+                    <ul class="card-list">
+                        <li>في العرض: مميزات الشيف + مبررات UX + إدارة الصور</li>
+                        <li>في الديمو: إضافة منتج بصور متعددة + تعديل بيانات المطبخ</li>
+                        <li>نقطة تقنية: Cloudinary upload + ImagePicker/Cropper + Validation</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="role-badge">هيله</span>
+                    <h3>واجهات العميل (Customer UI)</h3>
+                    <p>مسؤولة عن رحلة العميل داخل التطبيق: تصفح، اختيار منتجات، وإكمال الطلب ومتابعة الحالة.</p>
+                    <ul class="card-list">
+                        <li>في العرض: رحلة العميل + قرارات سهولة الاستخدام</li>
+                        <li>في الديمو: إنشاء Order ومتابعة تغيّر الحالة</li>
+                        <li>نقطة تقنية: التعامل مع الحالة (Providers) وتحديثات real-time في الواجهة</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="role-badge">آيات</span>
+                    <h3>واجهات الأدمن (Admin UI)</h3>
+                    <p>مسؤولة عن شاشات الإدارة: مراجعة طلبات الاشتراك، القبول/الرفض مع سبب، وإظهار الأثر على حساب الشيف.</p>
+                    <ul class="card-list">
+                        <li>في العرض: صلاحيات الأدمن + لماذا استخدمنا Batch updates</li>
+                        <li>في الديمو: فتح subscription requests ثم Approve/Reject وإظهار الإشعار</li>
+                        <li>نقطة تقنية: Firestore Batch + إرسال إشعار موجه</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="qa">
+        <div class="container">
+            <h2 class="title-gradient">أسئلة متوقعة (جاهزة للتقييم)</h2>
+            <p class="section-subtitle">إجابات مختصرة وواضحة تغطي أكثر الأسئلة التي تتكرر في المناقشات.</p>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-circle-question"></i>
+                    <h3>لماذا Clean Architecture؟</h3>
+                    <p>لأنه مشروع متعدد الأدوار والميزات. الفصل بين الطبقات يقلل التعقيد ويسهل إضافة Features جديدة بدون كسر النظام.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-circle-question"></i>
+                    <h3>كيف أثبتّم الالتزام بـ SRP/DRY؟</h3>
+                    <p>Providers لإدارة الحالة فقط، Repositories للبيانات فقط، Services للإشعارات/الرفع فقط، مع Widgets مشتركة وثوابت تصميم مركزية.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-circle-question"></i>
+                    <h3>كيف ضمنتم الأمان؟</h3>
+                    <p>Firebase Auth + عزل البيانات حسب uid + قواعد Firestore + عدم رفع أسرار + Signing للتطبيق عند النشر.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-circle-question"></i>
+                    <h3>كيف النظام لحظي؟</h3>
+                    <p>Firestore snapshots/Streams للطلبات وتحديثات المستخدم والإحصائيات، مما يلغي الحاجة للـ Refresh.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid var(--border);">
+        <p>تم تطوير "نفس" وفق معايير هندسة البرمجيات الحديثة</p>
+        <p style="font-size: 0.8em; margin-top: 10px; opacity: 0.6;">Project Graduation 2026</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Hero app-like role switch
+        const roleTabs = Array.from(document.querySelectorAll('.app-tab'));
+        const roleChip = document.getElementById('roleChip');
+        const appScreens = Array.from(document.querySelectorAll('.app-screen'));
+        const phone = document.getElementById('phone');
+        const autoHint = document.getElementById('autoHint');
+        let roleAutoTimer = null;
+        let roleIndex = 0;
+        const roles = ['customer', 'chef', 'admin'];
+        const roleLabel = {
+            customer: 'Customer',
+            chef: 'Chef',
+            admin: 'Admin',
+        };
+
+        function setRole(role) {
+            roleTabs.forEach((t) => t.classList.toggle('active', t.dataset.role === role));
+            appScreens.forEach((s) => s.classList.toggle('active', s.dataset.screen === role));
+            if (roleChip) roleChip.textContent = roleLabel[role] || role;
+            roleIndex = roles.indexOf(role);
+            if (roleIndex < 0) roleIndex = 0;
+        }
+
+        function stopAuto() {
+            if (roleAutoTimer) {
+                clearInterval(roleAutoTimer);
+                roleAutoTimer = null;
+            }
+            if (autoHint) autoHint.classList.add('hidden');
+            if (phone) phone.classList.remove('float');
+        }
+
+        roleTabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                stopAuto();
+                setRole(tab.dataset.role);
+            });
+        });
+
+        if (!prefersReducedMotion) {
+            if (phone) phone.classList.add('float');
+        }
+        roleAutoTimer = setInterval(() => {
+            roleIndex = (roleIndex + 1) % roles.length;
+            setRole(roles[roleIndex]);
+        }, prefersReducedMotion ? 4200 : 3200);
+
+        // Cinematic spotlight follow
+        const spotlight = document.getElementById('spotlight');
+        let spX = 50;
+        let spY = 45;
+        let spTX = 50;
+        let spTY = 45;
+
+        function animateSpotlight() {
+            if (prefersReducedMotion) return;
+            spX += (spTX - spX) * 0.08;
+            spY += (spTY - spY) * 0.08;
+            spotlight.style.background = `radial-gradient(circle at ${spX.toFixed(2)}% ${spY.toFixed(2)}%, rgba(167, 243, 208, 0.14), rgba(47, 191, 113, 0.06) 35%, transparent 60%)`;
+            requestAnimationFrame(animateSpotlight);
+        }
+        requestAnimationFrame(animateSpotlight);
+
+        window.addEventListener('mousemove', (e) => {
+            spTX = (e.clientX / window.innerWidth) * 100;
+            spTY = (e.clientY / window.innerHeight) * 100;
+        }, { passive: true });
+
+        // Intro overlay
+        const intro = document.getElementById('intro');
+        if (!prefersReducedMotion) {
+            window.setTimeout(() => {
+                intro.classList.add('hidden');
+            }, 1400);
+        } else {
+            intro.classList.add('hidden');
+        }
+
+        intro.addEventListener('click', () => {
+            intro.classList.add('hidden');
+        });
+
+        // Scroll progress bar
+        const scrollBar = document.getElementById('scrollBar');
+        function updateScrollProgress() {
+            const doc = document.documentElement;
+            const scrollTop = doc.scrollTop || document.body.scrollTop;
+            const scrollHeight = doc.scrollHeight - doc.clientHeight;
+            const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) : 0;
+            scrollBar.style.width = (progress * 100).toFixed(2) + '%';
+        }
+        updateScrollProgress();
+        window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+        // Scroll reveal animations + active section spotlight
+        const sections = Array.from(document.querySelectorAll('section'));
+        sections.forEach((sec) => sec.classList.add('reveal'));
+
+        const staggerTargets = Array.from(document.querySelectorAll('.grid, .timeline'));
+        staggerTargets.forEach((el) => el.classList.add('reveal-stagger'));
+
+        let activeSection = null;
+
+        const io = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (!entry.isIntersecting) continue;
+                    entry.target.classList.add('visible');
+                }
+
+                const best = entries
+                    .filter((e) => e.isIntersecting && e.target.tagName === 'SECTION')
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+                if (best && best.target !== activeSection) {
+                    if (activeSection) activeSection.classList.remove('is-active');
+                    activeSection = best.target;
+                    activeSection.classList.add('is-active');
+                }
+            },
+            { threshold: [0.12, 0.22, 0.35, 0.5], rootMargin: '0px 0px -10% 0px' }
+        );
+
+        [...sections, ...staggerTargets].forEach((el) => io.observe(el));
+
+        // Particles generation (strong mode)
+        const particlesRoot = document.querySelector('.particles');
+        const particleCount = 78;
+        if (particlesRoot) {
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                const left = Math.random() * 100;
+                const top = 100 + Math.random() * 30;
+                const duration = 10 + Math.random() * 16;
+                const delay = -Math.random() * duration;
+                const size = 2 + Math.random() * 2;
+
+                p.style.left = left.toFixed(2) + 'vw';
+                p.style.top = top.toFixed(2) + 'vh';
+                p.style.width = size.toFixed(2) + 'px';
+                p.style.height = size.toFixed(2) + 'px';
+                p.style.animationDuration = duration.toFixed(2) + 's';
+                p.style.animationDelay = delay.toFixed(2) + 's';
+                p.style.opacity = (0.25 + Math.random() * 0.6).toFixed(2);
+                particlesRoot.appendChild(p);
+            }
+        }
+
+        // Subtle parallax on background
+        const bg = document.querySelector('.animated-bg');
+        let rafId = null;
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
+        function animateParallax() {
+            currentX += (targetX - currentX) * 0.08;
+            currentY += (targetY - currentY) * 0.08;
+            bg.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+            rafId = requestAnimationFrame(animateParallax);
+        }
+        rafId = requestAnimationFrame(animateParallax);
+
+        window.addEventListener('mousemove', (e) => {
+            const dx = (e.clientX / window.innerWidth) - 0.5;
+            const dy = (e.clientY / window.innerHeight) - 0.5;
+            targetX = dx * 10;
+            targetY = dy * 10;
+        }, { passive: true });
+
+        // 3D tilt on cards
+        const cards = Array.from(document.querySelectorAll('.card'));
+        if (!prefersReducedMotion) {
+            cards.forEach((card) => {
+                const shine = document.createElement('div');
+                shine.className = 'tilt-shine';
+                card.appendChild(shine);
+
+                card.addEventListener('mousemove', (e) => {
+                    const r = card.getBoundingClientRect();
+                    const x = e.clientX - r.left;
+                    const y = e.clientY - r.top;
+                    const rx = ((y / r.height) - 0.5) * -10;
+                    const ry = ((x / r.width) - 0.5) * 10;
+
+                    card.style.setProperty('--mx', (x / r.width * 100).toFixed(2) + '%');
+                    card.style.setProperty('--my', (y / r.height * 100).toFixed(2) + '%');
+                    card.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-2px)`;
+                    card.classList.add('is-tilting');
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                    card.classList.remove('is-tilting');
+                });
+            });
+        }
+    </script>
+    <script>
+        // Generate floating particles
+        function generateParticles() {
+            const container = document.getElementById('splashParticles');
+            if (!container) return;
+
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'splash-particle';
+                particle.style.left = (Math.random() * 100) + '%';
+                particle.style.animationDelay = (Math.random() * 6) + 's';
+                particle.style.animationDuration = (4 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Generate floating stars
+        function generateStars() {
+            const container = document.getElementById('splashStars');
+            if (!container) return;
+
+            const stars = ['✨', '⭐', '🌟'];
+            for (let i = 0; i < 8; i++) {
+                const star = document.createElement('div');
+                star.className = 'splash-star';
+                star.textContent = stars[Math.floor(Math.random() * stars.length)];
+                star.style.left = (Math.random() * 100) + '%';
+                star.style.top = (Math.random() * 100) + '%';
+                star.style.animationDelay = (Math.random() * 8) + 's';
+                star.style.animationDuration = (6 + Math.random() * 4) + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // Generate floating circles
+        function generateCircles() {
+            const container = document.getElementById('splashCircles');
+            if (!container) return;
+
+            for (let i = 0; i < 5; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'splash-circle';
+                circle.style.left = (Math.random() * 100) + '%';
+                circle.style.top = (Math.random() * 100) + '%';
+                circle.style.width = (30 + Math.random() * 50) + 'px';
+                circle.style.height = circle.style.width;
+                circle.style.animationDelay = (Math.random() * 10) + 's';
+                circle.style.animationDuration = (8 + Math.random() * 4) + 's';
+                container.appendChild(circle);
+            }
+        }
+
+        // Splash screen control
+        let splashScreen = document.getElementById('splashScreen');
+
+        // Generate animated elements
+        window.addEventListener('load', () => {
+            generateParticles();
+            generateStars();
+            generateCircles();
+        });
+
+        // Space key to hide splash screen
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && splashScreen && !splashScreen.classList.contains('hidden')) {
+                e.preventDefault();
+                splashScreen.classList.add('hidden');
+            }
+        });
+    </script>
+    <script src="script.js" defer></script>
+</body>
+</html>
